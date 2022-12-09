@@ -1,0 +1,134 @@
+<?php 
+include 'db_connect.php'; 
+// $output = '';
+// if (isset($_POST['search'])){
+// 	$searchq=$_POST['search'];
+// 	$searchq=preg_replace("#[^0-9]#i","",$searchq);
+
+// 	$query = mysqli_query("SELECT * FROM parcel WHERE id LIKE '%$searchq%'") or die("Could not search!");
+// 	$count = mysqli_num_rows($query);
+// 	if($count == 0){
+// 		$output = 'There was no search results';
+// 	}else{
+// 		while ($row = mysqli_fetch_array($query)){
+// 			$id = $row['id'];
+
+// 			$output .= '<div> '.$id.'</div.';
+// 		}
+// 	}
+// }
+
+?>
+<div class="col-lg-12">
+	<div class="card card-outline card-primary">
+		<div class="card-body">
+			<form action="index.php?page=track" method="POST">
+				<div class="d-flex w-100 px-1 py-2 justify-content-center align-items-center">
+					<label for="">Enter Tracking Number</label>
+					<div class="input-group col-sm-5">
+						<input type="search" id="ref_no" class="form-control form-control-sm" placeholder="Type the tracking number here" name="name">
+						<input type="submit" name="submit" class="btn btn-primary" value="Search" >
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8 offset-md-2">
+			<div class="timeline" id="parcel_history">
+				
+			</div>
+		</div>
+	</div>
+</div>
+<div id="clone_timeline-item" class="d-none">
+	<div class="iitem">
+	    <i class="fas fa-box bg-blue"></i>
+	    <div class="timeline-item">
+	      <span class="time"><i class="fas fa-clock"></i> <span class="dtime">12:05</span></span>
+	      <div class="timeline-body">
+	      	asdasd
+	      </div>
+	    </div>
+	  </div>
+</div>
+
+
+<body>
+	<div class="container">
+		<!-- <button class="btn btn-primary my-5">
+			<a href="new_user.php" class="text-light">Add User</a>
+		</button> -->
+<table class="table table-striped-columns">
+<thead>
+	<tr>
+	<th scope="col">Transaction Id</th>
+	<th scope="col">Sender's Name</th>
+	<th scope="col">Sender's Address</th>
+	<th scope="col">Sender's Phone No.</th>
+	<th scope="col">Recipient's Name</th>
+	<th scope="col">Recipient's Address</th>
+	<th scope="col">Recipient's Phone No.</th>
+	<th scope="col">Weight</th>
+    <th scope="col">Height</th>
+    <th scope="col">Price</th>
+    <th scope="col">Type</th>
+	<th scope="col">Date Created</th>
+	<th scope="col">Status</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+if($_REQUEST['submit']){
+$name = $_POST['name'];
+
+if(empty($name)){
+	$make = '<h4>You must type a word to search!</h4>';
+}else{
+	$make = '<h4>No match found!</h4>';
+	$sele = "SELECT * FROM parcel WHERE id LIKE '%$name%'";
+	$result = mysqli_query($conn,$sele);
+	
+	if($row = mysqli_num_rows($result) > 0){
+		while($row = mysqli_fetch_assoc($result)){
+            $id=$row['id'];
+            $s_name=$row['s_name'];
+            $s_address=$row['s_address'];
+            $s_mobile=$row['s_mobile'];
+            $r_name=$row['r_name'];
+            $r_address=$row['r_address'];
+            $r_mobile=$row['r_mobile'];
+            $weight=$row['weight'];
+            $height=$row['height'];
+            $price=$row['price'];
+            $type=$row['type'];
+			$date_created=$row['date_created'];
+			$status=$row['status'];
+
+            echo ' <tr>
+		    <th scope="row">'.$id.'</th>
+		    <td>'.$s_name.'</td>
+		    <td>'.$s_address.'</td>
+		    <td>'.$s_mobile.'</td>
+            <td>'.$r_name.'</td>
+		    <td>'.$r_address.'</td>
+            <td>'.$r_mobile.'</td>
+		    <td>'.$weight.'</td>
+            <td>'.$height.'</td>
+            <td>'.$price.'</td>
+		    <td>'.$type.'</td>
+			<td>'.$date_created.'</td>
+			<td>'.$status.'</td>
+		    </tr>';
+
+	}
+}else{
+print ($make);
+}
+mysqli_free_result($result);
+mysqli_close($conn);
+}
+}
+
+?>
+
